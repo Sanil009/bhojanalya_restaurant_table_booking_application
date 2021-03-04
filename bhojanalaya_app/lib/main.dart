@@ -1,12 +1,12 @@
 import 'package:bhojanalaya_app/constants.dart';
-import 'package:bhojanalaya_app/settings.dart';
+import 'package:bhojanalaya_app/UI/customer/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'home.dart';
 import 'constants.dart';
 import 'signup.dart';
-import 'profile.dart';
+import 'UI/customer/profile.dart';
 
 void main() {
   runApp(MyApp());

@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          'Hello There',
+                          'Hello',
                           style: kTextStyle,
                         ),
                       ],

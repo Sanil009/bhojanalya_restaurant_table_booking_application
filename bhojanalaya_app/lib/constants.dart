@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-//Colours.
+//Colours
 const kRedColour = Color(0xFFA10D0D);
 const kGreenColour = Color(0xFF11C529);
+const kYellowColour = Color(0xFFB5BB64);
 
-//Text Styles.
+//Text Styles
 const kTextStyle = TextStyle(
     fontFamily: 'Raleway', fontSize: 25.0, fontWeight: FontWeight.bold);
 
@@ -18,7 +19,7 @@ const kSmallTextStyle = TextStyle(
     fontFamily: 'Raleway', fontSize: 18.0, fontWeight: FontWeight.bold);
 
 const kNormalTextStyle =
-    TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold);
+    TextStyle(fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.bold);
 
 const kLoginUnderLinedText = TextStyle(
   color: Color(0xFFFF3333),

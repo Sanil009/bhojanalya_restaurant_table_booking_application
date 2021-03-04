@@ -1,4 +1,4 @@
-import 'package:bhojanalaya_app/restaurant_list.dart';
+import 'package:bhojanalaya_app/UI/restaurant/restaurant_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
