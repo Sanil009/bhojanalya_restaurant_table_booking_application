@@ -7,7 +7,8 @@ def get_token_generator():
     token_class = RandomNumberTokenGenerator
     options = {}
 
-    DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = getattr(settings, 'DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG', None)
+    DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = getattr(
+        settings, 'DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG', None)
 
     if DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG:
         if "CLASS" in DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG:
@@ -30,8 +31,6 @@ class BaseTokenGenerator:
 
     def generate_token(self, *args, **kwargs):
         raise NotImplementedError
-
-
 
 
 class RandomNumberTokenGenerator(BaseTokenGenerator):

@@ -1,6 +1,7 @@
-from authentication.models import User
+from authentication.models import CustomUser
 from rest_framework import permissions
 from django.core.exceptions import PermissionDenied
+
 
 class UpdateOwnProfile(permissions.BasePermission):
     """Allows Users to edit their own profile"""
@@ -13,12 +14,13 @@ class UpdateOwnProfile(permissions.BasePermission):
 
         return obj.id == request.user.id
 
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return (request.user and request.user.is_superuser) or (obj.user== request.user) 
+        return (request.user and request.user.is_superuser) or (obj.user == request.user)
 
 
 class IsSameUserAllowEditionOrReadOnly(permissions.BasePermission):
