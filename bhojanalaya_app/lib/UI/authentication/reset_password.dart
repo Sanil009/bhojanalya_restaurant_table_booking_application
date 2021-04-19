@@ -1,20 +1,20 @@
 import 'package:bhojanalaya_app/constants.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import '../../constants.dart';
 
-class LoginPage extends StatefulWidget {
+class ResetPasswordPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Login',
+                          'Reset',
                           style: TextStyle(
                             fontSize: 85.0,
                             fontWeight: FontWeight.bold,
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          'Hello',
+                          'Password',
                           style: kTextStyle,
                         ),
                       ],
@@ -63,35 +63,28 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 10.0),
-                    //Password
+                    //Old Password
                     TextField(
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Old Password',
+                        labelStyle: kTextStyle,
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
+                    //New Password
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'New Password',
                         labelStyle: kTextStyle,
                       ),
                       obscureText: true,
                     ),
                     SizedBox(height: 20.0),
-                    //Forgot Password
-                    Container(
-                      alignment: Alignment(1.0, 0.0),
-                      child: GestureDetector(
-                        child: InkWell(
-                          child: Text(
-                            'Forgot Password?',
-                            style: kLoginUnderLinedText,
-                          ),
-                        ),
-                        onTap: () {
-                          print('forgot');
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    //Login Button
+                    //Done Button
                     RaisedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/home');
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (route) => false);
                       },
                       color: Colors.black,
                       textColor: Colors.white,
@@ -101,73 +94,39 @@ class _LoginPageState extends State<LoginPage> {
                           color: kRedColour,
                           borderRadius: BorderRadius.all(Radius.circular(50.0)),
                         ),
-                        padding: EdgeInsets.fromLTRB(150.0, 15.0, 150.0, 15.0),
+                        padding: EdgeInsets.fromLTRB(135.0, 15.0, 135.0, 15.0),
                         child: Text(
-                          'LOGIN',
+                          'DONE',
+                          style: kTextStyle,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
+                    //Cancel
+                    RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (route) => false);
+                      },
+                      color: Colors.black,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(0.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: kRedColour,
+                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        ),
+                        padding: EdgeInsets.fromLTRB(120.0, 15.0, 120.0, 15.0),
+                        child: Text(
+                          'CANCEL',
                           style: kTextStyle,
                         ),
                       ),
                     ),
                     SizedBox(height: 20.0),
-                    //Login with google.
-                    RaisedButton(
-                      onPressed: () {
-                        print('Login With Google');
-                      },
-                      color: Colors.black,
-                      textColor: Colors.black,
-                      padding: EdgeInsets.all(0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFFFFFF),
-                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        ),
-                        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Center(
-                              child: ImageIcon(AssetImage('images/Google.png')),
-                            ),
-                            SizedBox(width: 10.0),
-                            Center(
-                              child: Text(
-                                'Login With Google',
-                                style: kTextStyle,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
                   ],
                 ),
               ),
-            ),
-            //3rd Part
-            //Register
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Need an account?',
-                  style: TextStyle(
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 5.0),
-                InkWell(
-                  child: Text(
-                    'Register',
-                    style: kLoginUnderLinedText,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/signup');
-                  },
-                ),
-              ],
             ),
           ],
         ),

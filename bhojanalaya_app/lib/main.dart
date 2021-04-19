@@ -1,13 +1,16 @@
 import 'package:bhojanalaya_app/constants.dart';
-import 'package:bhojanalaya_app/UI/customer/settings.dart';
+import 'package:bhojanalaya_app/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'splash.dart';
-import 'login.dart';
-import 'home.dart';
 import 'constants.dart';
-import 'signup.dart';
-import 'UI/customer/profile.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+
+// Future main() async {
+//   await DotEnv.load(fileName: ".env");
+//   print(DotEnv.env);
+//   runApp(MyApp());
+// }
 
 void main() {
   runApp(MyApp());
@@ -19,13 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => new LoginPage(),
-        '/home': (BuildContext context) => new HomePage(),
-        '/signup': (BuildContext context) => new Signup(),
-        '/profile': (BuildContext context) => new ProfilePage(),
-        '/settings': (BuildContext context) => new SettingsPage(),
-      },
+      routes: routes,
       title: 'Bhojanalaya',
       theme: ThemeData.dark().copyWith(
         visualDensity: VisualDensity.adaptivePlatformDensity,

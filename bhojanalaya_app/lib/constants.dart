@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 //Colours
-const kRedColour = Color(0xFFA10D0D);
+const kBackGroundColour = Color(0xFF000000);
+const kRedColour = Color(0xFFA10D0D); //0xFFA10D0D
 const kGreenColour = Color(0xFF11C529);
 const kYellowColour = Color(0xFFB5BB64);
 
@@ -20,6 +21,9 @@ const kSmallTextStyle = TextStyle(
 
 const kNormalTextStyle =
     TextStyle(fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.bold);
+
+const kSettingsTitleTextStyle =
+    TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold);
 
 const kLoginUnderLinedText = TextStyle(
   color: Color(0xFFFF3333),

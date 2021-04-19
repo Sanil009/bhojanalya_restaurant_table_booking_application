@@ -1,7 +1,7 @@
 import 'package:bhojanalaya_app/UI/restaurant/restaurant_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import '../../constants.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,80 +9,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<Map> myProducts =
+      List.generate(1000, (index) => {"id": index, "name": "Product $index"})
+          .toList();
+
   final CategoriesScroller categoriesScroller = CategoriesScroller();
   ScrollController controller = ScrollController();
   bool closeTopContainer = false;
   double topContainer = 0;
-
-  List<Widget> itemsData = [];
-
-  void getPostsData() {
-    List<dynamic> responseList = kRestaurantData;
-    List<Widget> listItems = [];
-    responseList.forEach((post) {
-      listItems.add(Container(
-          height: 150,
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              color: Colors.grey,
-              boxShadow: [
-                BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-              ]),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      post["restaurant"],
-                      style: kTextStyle,
-                    ),
-                    Text(
-                      post["capacity"],
-                      style: TextStyle(fontSize: 17, color: Color(0xFF080149)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "\$ ${post["price"]}",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-                Image.asset(
-                  "assets/images/${post["image"]}",
-                  height: double.infinity,
-                )
-              ],
-            ),
-          )));
-    });
-    setState(() {
-      itemsData = listItems;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getPostsData();
-    controller.addListener(() {
-      double value = controller.offset / 119;
-
-      setState(() {
-        topContainer = value;
-        closeTopContainer = controller.offset > 50;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +25,10 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
+          title: Text(
+            'Bhojanalya',
+            style: kTextStyle,
+          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search, color: Colors.black),
@@ -120,31 +58,40 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 title: Text('Bookings', style: kSmallTextStyle),
+                leading: Icon(Icons.calendar_today_rounded),
                 onTap: () {
                   // close the drawer
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                title: Text('Wish lists', style: kSmallTextStyle),
+                title: Text('Saved', style: kSmallTextStyle),
+                leading: Icon(Icons.add_box),
                 onTap: () {
                   // close the drawer
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                title: Text('Help Centre', style: kSmallTextStyle),
-                onTap: () {
-                  // close the drawer
-                  Navigator.pop(context);
-                },
-              ),
+              // ListTile(
+              //   title: Text('Help Centre', style: kSmallTextStyle),
+              //   onTap: () {
+              //     // close the drawer
+              //     Navigator.pop(context);
+              //   },
+              // ),
               ListTile(
                 title: Text('Settings', style: kSmallTextStyle),
+                leading: Icon(Icons.app_settings_alt_outlined),
                 onTap: () {
                   // close the drawer
                   Navigator.of(context).pushNamed('/settings');
-                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Menu', style: kSmallTextStyle),
+                onTap: () {
+                  // close the drawer
+                  Navigator.of(context).pushNamed('/menu');
                 },
               ),
             ],
@@ -159,46 +106,66 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Text(
                     "Popular Restaurants",
-                    style: kTextStyle, //TextStyle(
-                    //       color: Colors.white,
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 20),
+                    style: kTextStyle,
                   ),
                 ],
               ),
               const SizedBox(
                 height: 10,
               ),
+
+              // horizontal scroller
               categoriesScroller,
+
               Expanded(
-                child: ListView.builder(
-                  controller: controller,
-                  itemCount: itemsData.length,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    double scale = 1.0;
-                    if (topContainer > 0.5) {
-                      scale = index + 0.5 - topContainer;
-                      if (scale < 0) {
-                        scale = 0;
-                      } else if (scale > 1) {
-                        scale = 1;
-                      }
-                    }
-                    return Opacity(
-                      opacity: scale,
-                      child: Transform(
-                        transform: Matrix4.identity()..scale(scale, scale),
-                        alignment: Alignment.bottomCenter,
-                        child: Align(
-                            heightFactor: 0.7,
-                            alignment: Alignment.topCenter,
-                            child: itemsData[index]),
-                      ),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20),
+                  itemCount: myProducts.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return Container(
+                      alignment: Alignment.center,
+                      child: Text(myProducts[index]["name"]),
+                      decoration: BoxDecoration(
+                          color: kRedColour,
+                          borderRadius: BorderRadius.circular(15)),
                     );
                   },
                 ),
-              ),
+              )
+
+              // Expanded(
+              //   child: ListView.builder(
+              //     controller: controller,
+              //     itemCount: itemsData.length,
+              //     physics: BouncingScrollPhysics(),
+              //     itemBuilder: (context, index) {
+              //       double scale = 1.0;
+              //       if (topContainer > 0.5) {
+              //         scale = index + 0.5 - topContainer;
+              //         if (scale < 0) {
+              //           scale = 0;
+              //         } else if (scale > 1) {
+              //           scale = 1;
+              //         }
+              //       }
+              //       return Opacity(
+              //         opacity: scale,
+              //         child: Transform(
+              //           transform: Matrix4.identity()..scale(scale, scale),
+              //           alignment: Alignment.bottomCenter,
+              //           child: Align(
+              //               heightFactor: 0.7,
+              //               alignment: Alignment.topCenter,
+              //               child: itemsData[index]),
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -238,7 +205,7 @@ class CategoriesScroller extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Most\nFavorites",
+                        "Pizza",
                         style: kTextStyle,
                       ),
                       SizedBox(
@@ -266,11 +233,12 @@ class CategoriesScroller extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Newest",
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                          "Momo Corner",
+                          style: kTextStyle,
+                          //  TextStyle(
+                          //       fontSize: 25,
+                          //       color: Colors.white,
+                          //       fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
                           height: 10,
@@ -298,10 +266,7 @@ class CategoriesScroller extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "Super\nSaving",
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                        style: kTextStyle,
                       ),
                       SizedBox(
                         height: 10,

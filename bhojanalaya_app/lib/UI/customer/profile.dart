@@ -12,13 +12,26 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text('Profile'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/edit_details', (route) => false);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("image"), fit: BoxFit.cover),
+                    image: AssetImage("ProfileIcon.jpg"), fit: BoxFit.cover),
               ),
               child: Container(
                 width: double.infinity,
@@ -203,25 +216,25 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 10.0,
             ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              color: Colors.black,
-              textColor: Colors.white,
-              padding: EdgeInsets.all(0.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: kGreenColour,
-                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                ),
-                padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
-                child: Text(
-                  'Go Back',
-                  style: kSmallTextStyle,
-                ),
-              ),
-            ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   color: Colors.black,
+            //   textColor: Colors.white,
+            //   padding: EdgeInsets.all(0.0),
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       color: kGreenColour,
+            //       borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            //     ),
+            //     padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
+            //     child: Text(
+            //       'Go Back',
+            //       style: kSmallTextStyle,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class SettingsPage extends StatefulWidget {
+class RestaurantSettingsPage extends StatefulWidget {
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _RestaurantSettingsPageState createState() => _RestaurantSettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _RestaurantSettingsPageState extends State<RestaurantSettingsPage> {
   bool lockInBackground = true;
   bool notificationsEnabled = true;
 
@@ -18,14 +18,18 @@ class _SettingsPageState extends State<SettingsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/restaurant_dashboard', (route) => false);
+            },
+          ),
           elevation: 0,
-          title: Text('Settings'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {},
-            ),
-          ],
+          title: Text(
+            'Settings',
+            style: kTextStyle,
+          ),
         ),
         body: buildSettingsList(),
       ),
@@ -70,33 +74,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           SettingsSection(
             titleTextStyle: kSettingsTitleTextStyle,
-            title: 'Notifications',
-            tiles: [
-              SettingsTile.switchTile(
-                title: 'Lock app in background',
-                leading: Icon(Icons.phonelink_lock),
-                switchValue: lockInBackground,
-                onToggle: (bool value) {
-                  setState(() {
-                    lockInBackground = value;
-                    notificationsEnabled = value;
-                  });
-                },
-              ),
-              SettingsTile.switchTile(
-                title: 'Enable Notifications',
-                leading: Icon(Icons.notifications_active),
-                switchValue: notificationsEnabled,
-                onToggle: (bool value) {
-                  setState(() {
-                    notificationsEnabled = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          SettingsSection(
-            titleTextStyle: kSettingsTitleTextStyle,
             title: 'Misc',
             tiles: [
               SettingsTile(
@@ -109,15 +86,6 @@ class _SettingsPageState extends State<SettingsPage> {
           CustomSection(
             child: Column(
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 22, bottom: 8),
-                //   child: Image.asset(
-                //     'assets/settings.png',
-                //     height: 50,
-                //     width: 50,
-                //     color: Color(0xFF777777),
-                //   ),
-                // ),
                 Text(
                   'Version: 1.0.0',
                   style: TextStyle(color: Color(0xFFD3D3D3)),

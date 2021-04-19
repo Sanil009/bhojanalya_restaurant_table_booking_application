@@ -12,7 +12,7 @@ class _FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +37,7 @@ class _FirstPageState extends State<FirstPage> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          'Select how you want to continue',
+                          'How do you want to continue?',
                           style: kSmallTextStyle,
                         ),
                       ],
@@ -73,7 +73,7 @@ class _FirstPageState extends State<FirstPage> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/login');
+                    Navigator.of(context).pushNamed('/restaurant_login');
                   },
                   color: Colors.black,
                   textColor: Colors.white,

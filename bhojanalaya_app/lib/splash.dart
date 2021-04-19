@@ -1,5 +1,5 @@
 import 'package:bhojanalaya_app/constants.dart';
-import 'UI/first_screen.dart';
+import 'UI/screens/first_screen.dart';
 import 'dart:async';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +18,16 @@ class _SplashState extends State<Splash> {
       seconds: 5,
       navigateAfterSeconds: new FirstPage(),
       title: new Text(
-        'Bhojanalaya',
+        'Bhojanalya',
+        style: TextStyle(
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Raleway',
+        ),
         textScaleFactor: 2,
       ),
-      image: new Image.asset('images/app_logo.png'),
+
+      // image: new Image.asset('images/app_logo.png'),
       loadingText: Text("Loading"),
       photoSize: 100.0,
       loaderColor: Colors.blue,
