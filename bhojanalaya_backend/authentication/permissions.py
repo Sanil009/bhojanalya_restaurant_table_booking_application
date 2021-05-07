@@ -23,6 +23,23 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return (request.user and request.user.is_superuser) or (obj.user == request.user)
 
 
+class ProfileOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Any permissions are only allowed to the owner of the meeting
+        return obj.user == request.user
+
+
+class CustomerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Any permissions are only allowed to the owner of the meeting
+        return obj.user == request.user
+
+
+class RestaurantOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Any permissions are only allowed to the owner of the meeting
+        return obj.user == request.user.is_doctor
+
 class IsSameUserAllowEditionOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow owners of an object to edit it.

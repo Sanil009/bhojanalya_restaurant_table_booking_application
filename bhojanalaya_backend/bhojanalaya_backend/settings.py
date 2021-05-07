@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,8 @@ SECRET_KEY = 'django-insecure-hgshpzf-3g0+ieq)4)dxjk^1i2#nvgcyb6pkj)r=ln3au%=ue!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost',
+                 '127.0.0.1', '192.168.1.160', '192.168.1.164']
 
 
 # Application definition
@@ -38,8 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django_extensions',
+    'jet',
+    'jet.dashboard',
     'rest_framework',
     'authentication',
+    'bookings',
+    'invoice',
+    'reviews',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -131,7 +139,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -143,7 +155,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'knox.auth.TokenAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -159,6 +170,10 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     }
 }
 
+JET_DEFAULT_THEME = 'light-gray'
+
+SITE_ID = 1
+
 AUTH_USER_MODEL = 'authentication.CustomUser'
 # AUTH_PROFILE_MODULE = 'authentication.UserProfile'
 
@@ -166,9 +181,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '5c0c0116497752'
-EMAIL_HOST_PASSWORD = '8812c80bb669ce'
-EMAIL_PORT = '2525'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'bhojanalayaapp@gmail.com'
+EMAIL_HOST_PASSWORD = 'bhojanalaya2021'
 
 #EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'bhojanalayaapp@gmail.com'
+#EMAIL_HOST_PASSWORD = 'bhojanalaya2021'

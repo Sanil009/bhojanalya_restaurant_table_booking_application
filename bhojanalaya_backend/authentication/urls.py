@@ -14,5 +14,5 @@ router.register('restaurant', UserView.RestaurantViewset,
 router.register('customer', UserView.CustomerViewset, basename='customer')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

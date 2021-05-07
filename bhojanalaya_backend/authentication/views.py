@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from authentication.utils import Util
 from rest_framework import generics, status
@@ -15,24 +14,15 @@ from authentication.permissions import (
     IsOwnerOrReadOnly
 )
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
-
-
 import os
-# from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.http import HttpResponsePermanentRedirect
-# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import viewsets, status, views, generics
-# from rest_framework.decorators import action
-# from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_500_INTERNAL_SERVER_ERROR, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-# from users.models import Customer, CustomUser, Restaurant
-# from users.serializers import RestaurantSerializer, UserSerializer, CustomTokenObtainPairSerializer, \
-#     EmailVerificationSerializer, ChangePasswordSerializer, CustomerSerializer, UserUpdateSerializer
 from .permissions import IsOwnerOrReadOnly
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
@@ -41,13 +31,7 @@ import jwt
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-# from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.shortcuts import get_object_or_404
-# from rest_framework.filters import SearchFilter, OrderingFilter
-
-# , ProfileOwnerOrReadOnly, CustomerOrReadOnly, RestaurantOrReadOnly
-
-
 class CustomRedirect(HttpResponsePermanentRedirect):
 
     allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
@@ -71,7 +55,7 @@ class UserViewSet(viewsets.ModelViewSet):
             relativeLink = reverse('email-verify')
             absurl = 'http://'+str(current_site) + \
                 relativeLink+'?token='+str(token)
-            email_body = 'Hello '+user.first_name + \
+            email_body = 'Hello '+user.name + \
                 ' Use below link to verify your email \n' + absurl
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Verify your Email!'}
@@ -117,7 +101,6 @@ class UserViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
     token_param_config = openapi.Parameter(
@@ -138,7 +121,6 @@ class VerifyEmail(views.APIView):
 
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token request new one'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class CustomerViewset(viewsets.ModelViewSet):
     queryset = Customer.objects.all()

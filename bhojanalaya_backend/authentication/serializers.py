@@ -70,6 +70,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
     email = serializers.ReadOnlyField(source="user.email")
     contact = serializers.ReadOnlyField(source="user.contact")
     address = serializers.ReadOnlyField(source="user.address")
+    
     # description = serializers.ReadOnlyField(source="user.description")
     # dish_speciality = serializers.ReadOnlyField(source="user.dish_speciality")
     # pictures = serializers.ReadOnlyField(source="user.pictures")

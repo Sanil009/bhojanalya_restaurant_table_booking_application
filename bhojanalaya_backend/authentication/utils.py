@@ -18,7 +18,8 @@ class Util:
     def send_email(data):
         email = EmailMessage(
             subject=data['email_subject'], body=data['email_body'], to=[data['to_email']])
-        EmailThread(email).start()
+        email.send()
+        # EmailThread(email).start()
 
     @staticmethod
     def send_resetemail(data):

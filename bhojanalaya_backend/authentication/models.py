@@ -41,6 +41,7 @@ class UserManager(BaseUserManager):
             email,
             password=password,
         )
+        user.is_staff = True
         user.is_admin = True
         user.save(using=self._db)
         return user
@@ -73,6 +74,7 @@ class CustomUser(AbstractBaseUser):
     is_customer = models.BooleanField(default=True)
     is_restaurant = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -119,7 +121,7 @@ class Customer(models.Model):
     profile_pic = models.ImageField(upload_to='customerprofile/',
                                     verbose_name="Profile Picture",)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.user}'
@@ -137,7 +139,7 @@ class Restaurant(models.Model):
                                     )
     approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=200)
     # type_data = (('In', "Indian"), ('It', "Italian"),
     #              ('Ch', "Chinese"), ('', "Chinese"))
@@ -149,6 +151,7 @@ class Restaurant(models.Model):
     is_open = models.BooleanField(default=True)
     parking = models.BooleanField(default=True)
     pictures = models.ImageField(null=True)
+    avg_price = models.IntegerField(null=True)
 
     def __str__(self):
         return f'{self.user}'
