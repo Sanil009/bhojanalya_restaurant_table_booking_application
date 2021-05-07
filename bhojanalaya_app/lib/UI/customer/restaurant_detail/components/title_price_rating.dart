@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../../../../constants.dart';
 
-class TitlePriceRating extends StatefulWidget {
+class TitlePriceRating extends StatelessWidget {
   final int price, numOfReviews;
   final double rating;
   final String name;
@@ -17,11 +17,6 @@ class TitlePriceRating extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TitlePriceRatingState createState() => _TitlePriceRatingState();
-}
-
-class _TitlePriceRatingState extends State<TitlePriceRating> {
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -32,7 +27,7 @@ class _TitlePriceRatingState extends State<TitlePriceRating> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.name,
+                  name,
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 SizedBox(height: 10),
@@ -40,43 +35,23 @@ class _TitlePriceRatingState extends State<TitlePriceRating> {
                   children: <Widget>[
                     SmoothStarRating(
                       borderColor: kRedColour,
-                      rating: widget.rating,
+                      rating: rating,
                       // onRatingChanged: onRatingChanged,
                     ),
                     SizedBox(width: 10),
-                    Text("${widget.numOfReviews} reviews"),
+                    Text("$numOfReviews reviews"),
                   ],
                 ),
               ],
             ),
           ),
-          // SizedBox(
-          //   width: 200.0,
-          // ),
-          // Expanded(
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.end,
-          //     children: <Widget>[
-          //       Text(
-          //         "Avg Price",
-          //         style: kSmallTextStyle,
-          //       ),
-          //       SizedBox(height: 10),
-          //       // Row(
-          //       //   children: <Widget>[
-          //       avgPriceTag(context, price: price),
-          //       //   ],
-          //       // ),
-          //     ],
-          //   ),
-          // ),
-          avgPriceTag(context, price: widget.price),
+          priceTag(context, price: price),
         ],
       ),
     );
   }
 
-  ClipPath avgPriceTag(BuildContext context, {int price}) {
+  ClipPath priceTag(BuildContext context, {int price}) {
     return ClipPath(
       clipper: PricerCliper(),
       child: Container(

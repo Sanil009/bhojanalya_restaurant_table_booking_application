@@ -13,82 +13,69 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  String _chosenValue;
-  // Dio dio = Dio();
-  // TextEditingController emailcontroller = new TextEditingController();
-  // final baseUrl = env['API_URL'];
-  // final TextEditingController emailTextEditingController =
-  //     new TextEditingController();
-  // final TextEditingController passwordTextEditingController =
-  //     new TextEditingController();
-  // final TextEditingController usernameEditingController =
-  //     new TextEditingController();
+  // String _chosenValue;
+  Dio dio = Dio();
+  TextEditingController emailcontroller = new TextEditingController();
+  final baseUrl = "http://192.168.1.164:8000/auth/register/";
+  final TextEditingController emailTextEditingController =
+      new TextEditingController();
+  final TextEditingController passwordTextEditingController =
+      new TextEditingController();
+  final TextEditingController nameTextEditingController =
+      new TextEditingController();
+  final TextEditingController contactTextEditingController =
+      new TextEditingController();
+  final TextEditingController addressTextEditingController =
+      new TextEditingController();
 
-  // void onRegisterPressed(context) async {
-  //   ProgressDialog progressDialog =
-  //       buildProgressDialog(context, "Validating Data...");
-  //   await progressDialog.show();
-  //   var data = {
-  //     'email': emailTextEditingController.text.trim(),
-  //     'username': usernameEditingController.text.trim(),
-  //     'password': passwordTextEditingController.text.trim()
-  //   };
-  //   try {
-  //     var response = await dio.post("http://192.168.1.160/register/",
-  //         data: json.encode(data));
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       print(response.data);
-  //       // jsonResponse = json.decode(response.data);
-  //       await progressDialog.hide();
-  //       await showDialog(
-  //           context: context,
-  //           builder: (context) {
-  //             return AlertDialog(
-  //               content: Text("Verification Link Sent to Email!"),
-  //               title: Text("Verification Pending"),
-  //               actions: [
-  //                 FlatButton(
-  //                     onPressed: () {
-  //                       Navigator.pushNamed(context, 'login');
-  //                     },
-  //                     child: Text('Ok'))
-  //               ],
-  //             );
-  //           });
-  //       await Future.delayed(Duration(seconds: 1), () async {
-  //         await Navigator.pushNamed(context, 'login');
-  //       });
-  //     }
-  //   } catch (e) {
-  //     await progressDialog.hide();
-  //     print(e);
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) {
-  //           return buildAlertDialog("Invalid");
-  //         });
-  //   }
-  //   await progressDialog.hide();
-  // }
-
-  // Future<void> registerUser(String email, String password) async {
-  //   try {
-  //     dynamic result = dio.post(
-  //       'path',
-  //       data: {
-  //         "email": email,
-  //         "password": password,
-  //       },
-  //     );
-  //     return result;
-  //   }
-  //   // on dio.DioError(Exception e) {
-  //   //   return e.message;
-  //   // }
-  //   catch (e) {
-  //     return null;
-  //   }
-  // }
+  void onRegisterPressed(context) async {
+    ProgressDialog progressDialog =
+        buildProgressDialog(context, "Validating Data...");
+    await progressDialog.show();
+    var data = {
+      'email': emailTextEditingController.text.trim(),
+      'password': passwordTextEditingController.text.trim(),
+      'contact': contactTextEditingController.text.trim(),
+      'name': nameTextEditingController.text.trim(),
+      'address': addressTextEditingController.text.trim(),
+    };
+    try {
+      var response = await dio.post("http://192.168.1.164:8000/auth/register/",
+          data: json.encode(data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+        // jsonResponse = json.decode(response.data);
+        await progressDialog.hide();
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text("Verification Link Sent to Email!"),
+                title: Text("Verification Pending"),
+                actions: [
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: Text('Ok'))
+                ],
+              );
+            });
+        await Future.delayed(Duration(seconds: 1), () async {
+          await Navigator.pushNamed(context, '/login');
+        });
+      }
+    } catch (e) {
+      await progressDialog.hide();
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return buildAlertDialog("Verification Link Sent to Email!");
+          });
+    }
+    await progressDialog.hide();
+  }
 
   @override
   void initState() {
@@ -131,6 +118,7 @@ class _SignupState extends State<Signup> {
                         // hintStyle: ,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
+                    controller: nameTextEditingController,
                   ),
                   TextField(
                     // controller: email,
@@ -139,6 +127,7 @@ class _SignupState extends State<Signup> {
                         labelStyle: kTextStyle,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
+                    controller: emailTextEditingController,
                   ),
                   TextField(
                     decoration: InputDecoration(
@@ -146,6 +135,7 @@ class _SignupState extends State<Signup> {
                         labelStyle: kTextStyle,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
+                    controller: passwordTextEditingController,
                     obscureText: true,
                   ),
                   TextField(
@@ -154,6 +144,7 @@ class _SignupState extends State<Signup> {
                         labelStyle: kTextStyle,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
+                    controller: contactTextEditingController,
                   ),
                   TextField(
                     decoration: InputDecoration(
@@ -161,44 +152,14 @@ class _SignupState extends State<Signup> {
                         labelStyle: kTextStyle,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
+                    controller: addressTextEditingController,
                   ),
-                  DropdownButton<String>(
-                    focusColor: Colors.white,
-                    value: _chosenValue,
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                    ),
-                    elevation: 5,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.black,
-                    items: <String>[
-                      'Male',
-                      'Female',
-                      'LGBTQ',
-                      'Prefered not to say'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: kSmallTextStyle,
-                        ),
-                      );
-                    }).toList(),
-                    hint: Text("Gender", style: kTextStyle),
-                    onChanged: (String value) {
-                      setState(() {
-                        _chosenValue = value;
-                      });
-                    },
-                    onTap: () {},
-                  ),
+
                   SizedBox(height: 20.0),
                   RaisedButton(
                     onPressed: () {
-                      // registerUser(email, password)
-                      Navigator.of(context).pushNamed('/profile');
+                      onRegisterPressed(context);
+                      // Navigator.of(context).pushNamed('/profile');
                     },
                     color: Colors.black,
                     textColor: Colors.white,

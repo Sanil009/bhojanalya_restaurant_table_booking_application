@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../constants.dart';
 
-class ReviewButton extends StatelessWidget {
+class ReviewButton extends StatefulWidget {
   const ReviewButton({
     Key key,
     @required this.size,
@@ -13,10 +13,15 @@ class ReviewButton extends StatelessWidget {
   final Function press;
 
   @override
+  _ReviewButtonState createState() => _ReviewButtonState();
+}
+
+class _ReviewButtonState extends State<ReviewButton> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       // padding: EdgeInsets.all(20),
-      width: size.width * 0.8,
+      width: widget.size.width * 0.8,
       // it will cover 80% of total width
       decoration: BoxDecoration(
         color: kRedColour,
@@ -25,7 +30,7 @@ class ReviewButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: press,
+          onTap: widget.press,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(

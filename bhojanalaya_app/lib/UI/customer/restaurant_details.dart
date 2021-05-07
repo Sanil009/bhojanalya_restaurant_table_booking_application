@@ -2,23 +2,18 @@ import 'package:bhojanalaya_app/UI/restaurant/details/components/body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'details/components/app_bar.dart';
 import 'package:bhojanalaya_app/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'details/components/order_button.dart';
-import 'details/components/review_button.dart';
-import 'details/components/title_price_rating.dart';
-
-class RestaurantProfile extends StatefulWidget {
+class RestaurantDetails extends StatefulWidget {
   List list;
   int index;
-  RestaurantProfile({this.list, this.index});
+  RestaurantDetails({this.list, this.index});
   @override
-  _RestaurantProfileState createState() => _RestaurantProfileState();
+  _RestaurantDetailsState createState() => _RestaurantDetailsState();
 }
 
-class _RestaurantProfileState extends State<RestaurantProfile> {
+class _RestaurantDetailsState extends State<RestaurantDetails> {
   final List<String> imglist = [
     "assets/images/restaurant.jpg",
     "assets/images/burger.png",
@@ -41,19 +36,19 @@ class _RestaurantProfileState extends State<RestaurantProfile> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/restaurant_dashboard', (route) => false);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
           },
         ),
         title: Text(
-          "My Restaurant",
+          "Profile",
           style: kTextStyle,
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.share),
+          //   onPressed: () {},
+          // ),
           IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
@@ -123,19 +118,19 @@ class _RestaurantProfileState extends State<RestaurantProfile> {
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                                 SizedBox(height: 10),
-                                Row(
-                                  children: <Widget>[
-                                    SmoothStarRating(
-                                      borderColor: kRedColour,
-                                      rating: 20,
-                                      // widget.list[widget.index],
-                                      // onRatingChanged: onRatingChanged,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                        "5"), //"{widget.list[widget.index][]} reviews"
-                                  ],
-                                ),
+                                // Row(
+                                //   children: <Widget>[
+                                //     SmoothStarRating(
+                                //       borderColor: kRedColour,
+                                //       rating: 20,
+                                //       // widget.list[widget.index],
+                                //       // onRatingChanged: onRatingChanged,
+                                //     ),
+                                //     SizedBox(width: 10),
+                                //     Text(
+                                //         "5"), //"{widget.list[widget.index][]} reviews"
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
@@ -289,10 +284,10 @@ class _OrderButtonState extends State<OrderButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SvgPicture.asset("assets/icons/bag.svg"),
-                SizedBox(width: 10),
+                // SvgPicture.asset("assets/icons/bag.svg"),
+                // SizedBox(width: 10),
                 Text(
-                  "Book Now",
+                  "Logout",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -342,10 +337,10 @@ class _ReviewButtonState extends State<ReviewButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SvgPicture.asset("assets/icons/bag.svg"),
-                SizedBox(width: 10),
+                // SvgPicture.asset("assets/icons/bag.svg"),
+                // SizedBox(width: 10),
                 Text(
-                  "Review the restaurant",
+                  "Delete Account",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

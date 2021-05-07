@@ -33,28 +33,6 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
             padding: EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 15.0),
             child: Column(
               children: <Widget>[
-                //View Bookings Button
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('', (route) => false);
-                  },
-                  color: Colors.black,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.all(0.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: kRedColour,
-                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                    ),
-                    padding: EdgeInsets.fromLTRB(92.0, 15.0, 92.0, 15.0),
-                    child: Text(
-                      'View Bookings',
-                      style: kTextStyle,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
                 //My Restaurant.
                 RaisedButton(
                   onPressed: () {
@@ -78,10 +56,11 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
 
                 SizedBox(height: 20.0),
 
-                //Menu Button
+                //View Bookings Button
                 RaisedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/menu');
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('', (route) => false);
                   },
                   color: Colors.black,
                   textColor: Colors.white,
@@ -89,6 +68,28 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: kRedColour,
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    ),
+                    padding: EdgeInsets.fromLTRB(92.0, 15.0, 92.0, 15.0),
+                    child: Text(
+                      'View Bookings',
+                      style: kTextStyle,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.0),
+
+                //Menu Button
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/menu');
+                  },
+                  color: Colors.black,
+                  textColor: Colors.black,
+                  padding: EdgeInsets.all(0.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(50.0)),
                     ),
                     padding: EdgeInsets.fromLTRB(140.0, 15.0, 140.0, 15.0),
@@ -101,24 +102,24 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
                 SizedBox(height: 20.0),
 
                 //Help Centre.
-                RaisedButton(
-                  onPressed: () {},
-                  color: Colors.black,
-                  textColor: Colors.black,
-                  padding: EdgeInsets.all(0.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                    ),
-                    padding: EdgeInsets.fromLTRB(101.0, 15.0, 101.0, 15.0),
-                    child: Text(
-                      'Help Centre',
-                      style: kTextStyle,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
+                // RaisedButton(
+                //   onPressed: () {},
+                //   color: Colors.black,
+                //   textColor: Colors.black,
+                //   padding: EdgeInsets.all(0.0),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: Color(0xFFFFFFFF),
+                //       borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                //     ),
+                //     padding: EdgeInsets.fromLTRB(101.0, 15.0, 101.0, 15.0),
+                //     child: Text(
+                //       'Help Centre',
+                //       style: kTextStyle,
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(height: 20.0),
 
                 //Menu Button
                 RaisedButton(

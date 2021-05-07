@@ -8,11 +8,39 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // final baseUrl = env["http://192.168.1.164:8000/auth/customer/"];
+  // Response response;
+  // Future<List> fetchCruds() async {
+  //   var response = await http.get(baseUrl);
+  //   if (response.statusCode == 200 || response.statusCode == 201) {
+  //     return jsonDecode(response.body);
+  //   } else {
+  //     throw Exception("Error");
+  //   }
+  // }
+
+  // @override
+  // void initState() {
+  //   fetchCruds();
+  //   super.initState();
+  // }
+
+  // Future<void> loadDashboard() async {
+  //   fetchCruds();
+  //   return;
+  // }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
+          },
+        ),
         elevation: 0,
         title: Text('Profile'),
         actions: <Widget>[
@@ -31,18 +59,19 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("ProfileIcon.jpg"), fit: BoxFit.cover),
+                    image: AssetImage("assets/images/ProfileIcon.jpg"),
+                    fit: BoxFit.cover),
               ),
               child: Container(
                 width: double.infinity,
                 height: 200,
                 child: Container(
                   alignment: Alignment(0.0, 2.5),
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('images/ProfileIcon.png'),
-                    minRadius: 50.0,
-                    maxRadius: 60.0,
-                  ),
+                  // child: CircleAvatar(
+                  //   backgroundImage: AssetImage('assests/ProfileIcon.jpg'),
+                  //   minRadius: 50.0,
+                  //   maxRadius: 60.0,
+                  // ),
                 ),
               ),
             ),
@@ -62,19 +91,26 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 10,
             ),
-            Text(
-              "Joined in 2020",
-              style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.white,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w300),
-            ),
+            // Text(
+            //   "Joined in 2021",
+            //   style: TextStyle(
+            //       fontSize: 18.0,
+            //       color: Colors.white,
+            //       letterSpacing: 2.0,
+            //       fontWeight: FontWeight.w300),
+            // ),
             SizedBox(
               height: 10,
             ),
             Text(
-              "Bhaktapur, Nepal",
+              "Address: Bhaktapur",
+              style: TextStyle(
+                  fontSize: 15.0,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w300),
+            ),
+            Text(
+              "Contact: 166357890",
               style: TextStyle(
                   fontSize: 15.0,
                   letterSpacing: 2.0,
@@ -108,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 7,
                           ),
                           Text(
-                            "15",
+                            "0",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22.0,
@@ -117,29 +153,29 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            "Reviews",
-                            style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 7,
-                          ),
-                          Text(
-                            "10",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w300),
-                          )
-                        ],
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: Column(
+                    //     children: [
+                    //       Text(
+                    //         "Reviews",
+                    //         style: TextStyle(
+                    //             color: Colors.blueAccent,
+                    //             fontSize: 22.0,
+                    //             fontWeight: FontWeight.w600),
+                    //       ),
+                    //       SizedBox(
+                    //         height: 7,
+                    //       ),
+                    //       Text(
+                    //         "10",
+                    //         style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 22.0,
+                    //             fontWeight: FontWeight.w300),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

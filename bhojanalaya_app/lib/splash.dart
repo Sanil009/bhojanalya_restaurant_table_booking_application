@@ -1,3 +1,4 @@
+import 'package:bhojanalaya_app/UI/authentication/login.dart';
 import 'package:bhojanalaya_app/constants.dart';
 import 'UI/screens/first_screen.dart';
 import 'dart:async';
@@ -16,9 +17,9 @@ class _SplashState extends State<Splash> {
     return SplashScreen(
       backgroundColor: Colors.black,
       seconds: 5,
-      navigateAfterSeconds: new FirstPage(),
+      navigateAfterSeconds: new LoginPage(),
       title: new Text(
-        'Bhojanalya',
+        'Bhojanalaya',
         style: TextStyle(
           fontSize: 30.0,
           fontWeight: FontWeight.bold,

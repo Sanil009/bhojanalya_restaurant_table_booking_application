@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:bhojanalaya_app/UI/widgets/alert_dialog.dart';
+import 'package:bhojanalaya_app/UI/widgets/progress_dialog.dart';
 import 'package:bhojanalaya_app/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import '../../constants.dart';
 import 'package:dio/dio.dart';
 
@@ -9,6 +14,41 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Dio dio = new Dio();
+  final TextEditingController emailTextEditingController =
+      new TextEditingController();
+  final TextEditingController passwordTextEditingController =
+      new TextEditingController();
+  Response response;
+  Future<void> onloginbtnpressed(context) async {
+    var data = {
+      'email': emailTextEditingController.text,
+      'password': passwordTextEditingController.text
+    };
+    try {
+      var response = await dio.post("http://192.168.1.164:8000/api/token/",
+          data: json.encode(data));
+      if (response.statusCode == 200) {
+        ProgressDialog progressDialog =
+            buildProgressDialog(context, "Logging in...");
+        await progressDialog.hide();
+        print(response.statusCode);
+        if (response.data['user_type'] == "C") {
+          await Navigator.pushNamed(context, '/home');
+        } else {
+          await Navigator.pushNamed(context, '/restaurant_dashboard');
+        }
+      }
+    } catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return buildAlertDialog("Invalid");
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -62,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Email',
                         labelStyle: kTextStyle,
                       ),
+                      controller: emailTextEditingController,
                     ),
                     SizedBox(height: 10.0),
                     //Password
@@ -70,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Password',
                         labelStyle: kTextStyle,
                       ),
+                      controller: passwordTextEditingController,
                       obscureText: true,
                     ),
                     SizedBox(height: 20.0),
@@ -93,8 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                     //Login Button
                     RaisedButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil('/home', (route) => false);
+                        onloginbtnpressed(context);
+                        // Navigator.of(context)
+                        //     .pushNamedAndRemoveUntil('/home', (route) => false);
                       },
                       color: Colors.black,
                       textColor: Colors.black,
@@ -132,39 +175,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    //Login with google.
-                    // RaisedButton(
-                    //   onPressed: () {
-                    //     print('Login With Google');
-                    //   },
-                    //   color: Colors.black,
-                    //   textColor: Colors.black,
-                    //   padding: EdgeInsets.all(0.0),
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //       color: Color(0xFFFFFFFF),
-                    //       borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                    //     ),
-                    //     padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: <Widget>[
-                    //         Center(
-                    //           child: ImageIcon(
-                    //               AssetImage('assets/images/Google.png')),
-                    //         ),
-                    //         SizedBox(width: 10.0),
-                    //         Center(
-                    //           child: Text(
-                    //             'Login With Google',
-                    //             style: kTextStyle,
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 15.0),
                   ],
                 ),
               ),
@@ -199,3 +209,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
+                    //Login with google.
+                    // RaisedButton(
+                    //   onPressed: () {
+                    //     print('Login With Google');
+                    //   },
+                    //   color: Colors.black,
+                    //   textColor: Colors.black,
+                    //   padding: EdgeInsets.all(0.0),
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       color: Color(0xFFFFFFFF),
+                    //       borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    //     ),
+                    //     padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: <Widget>[
+                    //         Center(
+                    //           child: ImageIcon(
+                    //               AssetImage('assets/images/Google.png')),
+                    //         ),
+                    //         SizedBox(width: 10.0),
+                    //         Center(
+                    //           child: Text(
+                    //             'Login With Google',
+                    //             style: kTextStyle,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 15.0),

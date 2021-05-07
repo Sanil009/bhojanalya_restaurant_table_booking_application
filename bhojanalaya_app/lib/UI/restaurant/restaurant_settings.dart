@@ -63,6 +63,9 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage> {
             title: 'Account',
             tiles: [
               SettingsTile(
+                // onTap: () {
+
+                // },
                 title: 'Account Details',
                 leading: Icon(Icons.account_circle_outlined),
               ),

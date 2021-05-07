@@ -1,10 +1,39 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:bhojanalaya_app/UI/restaurant/details/components/body.dart';
 import 'package:flutter/material.dart';
-import '../../../../constants.dart';
-import 'item_image.dart';
-import 'order_button.dart';
-import 'review_button.dart';
-import 'title_price_rating.dart';
+import 'components/app_bar.dart';
+import 'package:bhojanalaya_app/constants.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+import 'components/book_button.dart';
+import 'components/review_button.dart';
+import 'components/title_price_rating.dart';
+
+class RestaurantDetails extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          "Restaurant Detail",
+          style: kTextStyle,
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(child: Body()),
+    );
+  }
+}
 
 class Body extends StatelessWidget {
   final List<String> imglist = [
@@ -69,13 +98,13 @@ class ItemInfo extends StatelessWidget {
           shopeName(name: "Kathmandu"),
           TitlePriceRating(
             name: "H20",
-            numOfReviews: 20,
+            numOfReviews: 24,
             rating: 4,
             price: 15,
             onRatingChanged: (value) {},
           ),
           Text(
-            "Description /n Nowadays, arriving at restaurant and getting a vacant table is as dfficult as finding needle in grass field. With the growing population specially in the city, it has become hard to find the table adn have wait in the queue to find one so with this application we intend to make it easy to book table.",
+            "Nowadays, arriving at restaurant and getting a vacant table is as dfficult as finding needle in grass field. With the growing population specially in the city, it has become hard to find the table adn have wait in the queue to find one so with this application we intend to make it easy to book table.",
             style: TextStyle(
               height: 1.5,
             ),
@@ -89,7 +118,7 @@ class ItemInfo extends StatelessWidget {
           ),
           SizedBox(height: 20.0),
           // Free space  10% of total height
-          OrderButton(
+          BookButton(
             size: size,
             press: () {},
           ),

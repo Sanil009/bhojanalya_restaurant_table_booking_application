@@ -20,12 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           elevation: 0,
           title: Text('Settings'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {},
-            ),
-          ],
         ),
         body: buildSettingsList(),
       ),
@@ -68,33 +62,33 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          SettingsSection(
-            titleTextStyle: kSettingsTitleTextStyle,
-            title: 'Notifications',
-            tiles: [
-              SettingsTile.switchTile(
-                title: 'Lock app in background',
-                leading: Icon(Icons.phonelink_lock),
-                switchValue: lockInBackground,
-                onToggle: (bool value) {
-                  setState(() {
-                    lockInBackground = value;
-                    notificationsEnabled = value;
-                  });
-                },
-              ),
-              SettingsTile.switchTile(
-                title: 'Enable Notifications',
-                leading: Icon(Icons.notifications_active),
-                switchValue: notificationsEnabled,
-                onToggle: (bool value) {
-                  setState(() {
-                    notificationsEnabled = value;
-                  });
-                },
-              ),
-            ],
-          ),
+          // SettingsSection(
+          //   titleTextStyle: kSettingsTitleTextStyle,
+          //   title: 'Notifications',
+          //   tiles: [
+          //     SettingsTile.switchTile(
+          //       title: 'Lock app in background',
+          //       leading: Icon(Icons.phonelink_lock),
+          //       switchValue: lockInBackground,
+          //       onToggle: (bool value) {
+          //         setState(() {
+          //           lockInBackground = value;
+          //           notificationsEnabled = value;
+          //         });
+          //       },
+          //     ),
+          //     SettingsTile.switchTile(
+          //       title: 'Enable Notifications',
+          //       leading: Icon(Icons.notifications_active),
+          //       switchValue: notificationsEnabled,
+          //       onToggle: (bool value) {
+          //         setState(() {
+          //           notificationsEnabled = value;
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
           SettingsSection(
             titleTextStyle: kSettingsTitleTextStyle,
             title: 'Misc',

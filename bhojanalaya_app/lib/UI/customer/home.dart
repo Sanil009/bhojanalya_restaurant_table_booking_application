@@ -1,6 +1,12 @@
-import 'package:bhojanalaya_app/UI/restaurant/restaurant_list.dart';
+import 'dart:convert';
+
+// import 'package:bhojanalaya_app/UI/restaurant/restaurant_list.dart';
+import 'package:bhojanalaya_app/UI/customer/restaurant_details.dart';
+import 'package:bhojanalaya_app/UI/restaurant/restaurant_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import '../../constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +24,29 @@ class _HomePageState extends State<HomePage> {
   bool closeTopContainer = false;
   double topContainer = 0;
 
+  final baseUrl = "http://192.168.1.164:8000/auth/restaurant/";
+  Response response;
+  Future<List> fetchCruds() async {
+    var response = await http.get(baseUrl);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(jsonDecode(response.body));
+      return jsonDecode(response.body);
+    } else {
+      throw Exception("Error");
+    }
+  }
+
+  @override
+  void initState() {
+    fetchCruds();
+    super.initState();
+  }
+
+  Future<void> loadDashboard() async {
+    fetchCruds();
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size; //
@@ -32,7 +61,9 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search, color: Colors.black),
-              onPressed: () {},
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              },
             ),
             IconButton(
               icon: Icon(Icons.person, color: Colors.black),
@@ -57,21 +88,21 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               ListTile(
-                title: Text('Bookings', style: kSmallTextStyle),
+                title: Text('My Bookings', style: kSmallTextStyle),
                 leading: Icon(Icons.calendar_today_rounded),
                 onTap: () {
                   // close the drawer
-                  Navigator.pop(context);
+                  Navigator.of(context).pushNamed('/booking_list');
                 },
               ),
-              ListTile(
-                title: Text('Saved', style: kSmallTextStyle),
-                leading: Icon(Icons.add_box),
-                onTap: () {
-                  // close the drawer
-                  Navigator.pop(context);
-                },
-              ),
+              // ListTile(
+              //   title: Text('Saved', style: kSmallTextStyle),
+              //   leading: Icon(Icons.add_box),
+              //   onTap: () {
+              //     // close the drawer
+              //     Navigator.pop(context);
+              //   },
+              // ),
               // ListTile(
               //   title: Text('Help Centre', style: kSmallTextStyle),
               //   onTap: () {
@@ -87,13 +118,13 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed('/settings');
                 },
               ),
-              ListTile(
-                title: Text('Menu', style: kSmallTextStyle),
-                onTap: () {
-                  // close the drawer
-                  Navigator.of(context).pushNamed('/menu');
-                },
-              ),
+              // ListTile(
+              //   title: Text('Menu', style: kSmallTextStyle),
+              //   onTap: () {
+              //     // close the drawer
+              //     Navigator.of(context).pushNamed('/menu');
+              //   },
+              // ),
             ],
           ),
         ),
@@ -113,29 +144,49 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 10,
               ),
-
-              // horizontal scroller
               categoriesScroller,
 
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: myProducts.length,
-                  itemBuilder: (BuildContext ctx, index) {
-                    return Container(
-                      alignment: Alignment.center,
-                      child: Text(myProducts[index]["name"]),
-                      decoration: BoxDecoration(
-                          color: kRedColour,
-                          borderRadius: BorderRadius.circular(15)),
-                    );
-                  },
-                ),
-              )
+              FutureBuilder<List>(
+                  future: fetchCruds(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data.isEmpty) {
+                      return CircularProgressIndicator();
+                    } else {
+                      return Expanded(
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, i) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        new RestaurantDetails(
+                                          list: snapshot.data,
+                                          index: i,
+                                        )));
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Restaurant: ${snapshot.data[i]["name"]}",
+                                  style: kSmallTextStyle,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: kRedColour,
+                                    borderRadius: BorderRadius.circular(15)),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  }),
 
               // Expanded(
               //   child: ListView.builder(
@@ -212,7 +263,7 @@ class CategoriesScroller extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        "20 Items",
+                        "0 Items",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ],
@@ -233,7 +284,7 @@ class CategoriesScroller extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Momo Corner",
+                          "Momo",
                           style: kTextStyle,
                           //  TextStyle(
                           //       fontSize: 25,
@@ -244,7 +295,7 @@ class CategoriesScroller extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
-                          "20 Items",
+                          "1 Items",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ],
@@ -272,7 +323,7 @@ class CategoriesScroller extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        "20 Items",
+                        "0 Items",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ],
@@ -282,6 +333,49 @@ class CategoriesScroller extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // actions for appbar
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          }),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // leading icon on the left of the appbar
+    return IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+        ),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // show some result based on the selection
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // show when someone seached for something
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        leading: Icon(Icons.restaurant),
+        title: Text("Restaurant"),
       ),
     );
   }
