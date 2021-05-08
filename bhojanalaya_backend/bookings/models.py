@@ -15,6 +15,7 @@ class Bookings(models.Model):
     book = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # expired = models.BooleanField(_("")) 
     # stat = (('Pending', 'Pending'), ('Approved', 'Approved'))
     # status = models.CharField(
     #     max_length=50, choices=stat, default='Pending', null=True)
