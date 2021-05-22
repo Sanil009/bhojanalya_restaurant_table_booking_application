@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
-import django_heroku
+# import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-hgshpzf-3g0+ieq)4)dxjk^1i2#nvgcyb6pkj)r=ln3au%=ue!
 DEBUG = True
 
 ALLOWED_HOSTS = ['10.0.2.2', 'localhost',
-                 '127.0.0.1', '192.168.1.160', '192.168.1.164']
+                 '127.0.0.1', '192.168.1.160', '192.168.1.164', '192.168.1.166']
 
 
 # Application definition
@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'django_email_verification',
     'drf_yasg',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -152,15 +155,19 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    )
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+    'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
@@ -176,21 +183,18 @@ JET_DEFAULT_THEME = 'light-gray'
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
-# AUTH_PROFILE_MODULE = 'authentication.UserProfile'
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+# DEFAULT_FROM_EMAIL = "info@website.com"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bhojanalayaapp@gmail.com'
 EMAIL_HOST_PASSWORD = 'bhojanalaya2021'
 
-#EMAIL_USE_TLS = True
-#EMAIL_HOST_USER = 'bhojanalayaapp@gmail.com'
-#EMAIL_HOST_PASSWORD = 'bhojanalaya2021'
-
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

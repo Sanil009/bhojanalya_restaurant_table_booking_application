@@ -6,4 +6,4 @@ from rest_framework import serializers
 class ReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
-        fields = ['rating', 'coments', 'customer', 'restaurant']
+        fields = ['rating', 'comments', 'customer', 'restaurant']

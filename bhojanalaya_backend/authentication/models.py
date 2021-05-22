@@ -12,7 +12,7 @@ from django.conf import settings
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password=None, **extra_fields):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -97,13 +97,13 @@ class CustomUser(AbstractBaseUser):
 
     @property
     def is_customer(self):
-        "Is the user a customer?"
+        "Is the user a member of staff?"
 
         return self.is_admin
 
     @property
     def is_superuser(self):
-        "Is the user a member of admin?"
+        "Is the user a member of staff?"
 
         return self.is_admin
 
@@ -135,12 +135,12 @@ class Restaurant(models.Model):
         related_name='restaurant'
     )
     profile_pic = models.ImageField(upload_to='restaurantprofile/',
-                                    verbose_name="Restaurant Profile Picture",
+                                    verbose_name="Restaurant's Profile Picture",
                                     )
     approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    description = models.CharField(max_length=200)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    description = models.CharField(max_length=255)
     # type_data = (('In', "Indian"), ('It', "Italian"),
     #              ('Ch', "Chinese"), ('', "Chinese"))
     type = models.CharField(max_length=200)
@@ -158,7 +158,7 @@ class Restaurant(models.Model):
 
 
 @receiver(post_save, sender=CustomUser)
-# Now Creating a Function which will automatically insert data in HOD, Staff or Student
+# Now Creating a Function which will automatically insert data
 def create_user_profile(sender, instance, created, **kwargs):
     # if Created is true (Means Data Inserted)
     if created:
@@ -177,6 +177,48 @@ def save_user_profile(sender, instance, **kwargs):
         instance.customer.save()
     if instance.user_type == 'R':
         instance.restaurant.save()
+        
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = "{}?token={}".format(
+        reverse('password_reset:reset-password-request'), reset_password_token.key)
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Reset Your Passowrd"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "bhojanalayaapp@gmail.com",
+        # to:
+        [reset_password_token.user.email]
+    )
+
+
+
+
+
+
+
+
+# @receiver(reset_password_token_created)
+# def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+#     email_plaintext_message = "{}?token={}".format(
+#         reverse('password_reset:reset-password-request'), reset_password_token.key)
+
+#     send_mail(
+#         # title:
+#         "Password Reset for {title}".format(title="Some website title"),
+#         # message:
+#         email_plaintext_message,
+#         # from:
+#         "noreply@somehost.local",
+#         # to:
+#         [reset_password_token.user.email]
+#     )
 
 
 # class UserManager(BaseUserManager):
@@ -304,21 +346,3 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 # # class RestaurantProfile(models.Model):
-
-
-@receiver(reset_password_token_created)
-def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
-    email_plaintext_message = "{}?token={}".format(
-        reverse('password_reset:reset-password-request'), reset_password_token.key)
-
-    send_mail(
-        # title:
-        "Password Reset for {title}".format(title="Reset Your Passowrd"),
-        # message:
-        email_plaintext_message,
-        # from:
-        "bhojanalayaapp@gmail.com",
-        # to:
-        [reset_password_token.user.email]
-    )

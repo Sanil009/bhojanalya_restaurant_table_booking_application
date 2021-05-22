@@ -56,7 +56,7 @@ class BookingsViewset(viewsets.ModelViewSet):
             serializer = BookingsSerializer(data=request.data, context={"request": request})
             serializer.is_valid()
             serializer.save()
-            return Response({'success': 'Successfully Created'}, status=status.HTTP_201_CREATED)
+            return Response({'success': 'Booking Successfully Created'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
         

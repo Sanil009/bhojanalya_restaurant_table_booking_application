@@ -13,6 +13,7 @@ class Bookings(models.Model):
     restaurant = models.ForeignKey(
         'authentication.Restaurant', on_delete=models.CASCADE)
     book = models.BooleanField(default=False)
+    is_accepted = models.CharField(max_length=10, default='false')
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     # expired = models.BooleanField(_("")) 

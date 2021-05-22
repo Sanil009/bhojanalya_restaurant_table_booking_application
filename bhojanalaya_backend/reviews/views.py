@@ -43,6 +43,6 @@ class ReviewsViewsets(viewsets.ModelViewSet):
             serializer.is_valid()
             serializer.save()
             print(serializer)
-            return Response({'success': 'Successfully Created'}, status=status.HTTP_201_CREATED)
+            return Response({'success': 'Review Successfully Created'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'error': 'Only verified customer can create'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Only verified customer can review'}, status=status.HTTP_400_BAD_REQUEST)

@@ -2,8 +2,6 @@
 # from authentication.views import UserViewSet
 from django.urls import path, include
 from rest_framework import routers, urls
-# from authentication.views import CustomerView, VerifyEmail
-# from rest_framework.routers import DefaultRouter
 from . import views as UserView
 
 

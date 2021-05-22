@@ -1,22 +1,14 @@
-from django.shortcuts import render
-from authentication.utils import Util
-from rest_framework import generics, status
-from rest_framework.response import Response
+# from authentication.utils import Util
 from .serializers import ChangePasswordSerializer, CustomTokenObtainPairSerializer, CustomerSerializer, EmailVerificationSerializer, RestaurantSerializer, UserSerializer, UserUpdateSerializer
-from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
 from .models import CustomUser, Customer, Restaurant
-from django.contrib.sites.shortcuts import get_current_site
-import jwt
-from rest_framework import viewsets, permissions, mixins
-from django.conf import settings
-from authentication.permissions import (
-    IsOwnerOrReadOnly
-)
+# from authentication.permissions import (
+#     IsOwnerOrReadOnly
+# )
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
 import os
 from django.http import HttpResponsePermanentRedirect
-from rest_framework import viewsets, status, views, generics
+from rest_framework import viewsets, status, views, generics, permissions, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_500_INTERNAL_SERVER_ERROR, HTTP_400_BAD_REQUEST
@@ -32,6 +24,7 @@ from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.shortcuts import get_object_or_404
+from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 class CustomRedirect(HttpResponsePermanentRedirect):
 
     allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
@@ -43,6 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         try:
+            user=request.data
             serializer = UserSerializer(
                 data=request.data, context={"request": request})
             serializer.is_valid()
@@ -51,12 +45,11 @@ class UserViewSet(viewsets.ModelViewSet):
             user = CustomUser.objects.get(email=user_data['email'])
             token = RefreshToken.for_user(user).access_token
 
-            current_site = get_current_site(request)
+            current_site = get_current_site(request).domain
             relativeLink = reverse('email-verify')
-            absurl = 'http://'+str(current_site) + \
-                relativeLink+'?token='+str(token)
+            absurl = 'http://'+current_site+relativeLink+'?token='+str(token)
             email_body = 'Hello '+user.name + \
-                ' Use below link to verify your email \n' + absurl
+                ', please click on the link to verify your email \n' + absurl
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Verify your Email!'}
             Util.send_email(data)
@@ -95,7 +88,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({'message': 'Account Update Successful'})
+                return Response({'message': 'Account Updated Has Been Successfully'})
             else:
                 return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -110,7 +103,7 @@ class VerifyEmail(views.APIView):
     def get(self, request):
         token = request.GET.get('token')
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             user = CustomUser.objects.get(id=payload['user_id'])
             if not user.is_verified:
                 user.is_verified = True
@@ -137,19 +130,49 @@ class CustomerViewset(viewsets.ModelViewSet):
 class RestaurantViewset(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = (AllowAny,)
+        if self.request.method == 'DELETE':
+            self.permission_classes = (IsAdminUser,)
+        return super(RestaurantViewset, self).get_permissions()
 
 # ProfileOwnerOrReadOnly,
 
-
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-
 
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+
+    # def create(self, request):
+    #     try:
+    #         serializer = UserSerializer(
+    #             data=request.data, context={"request": request})
+    #         serializer.is_valid()
+    #         serializer.save()
+    #         user_data = serializer.data
+    #         user = CustomUser.objects.get(email=user_data['email'])
+    #         token = RefreshToken.for_user(user).access_token
+
+    #         current_site = get_current_site(request)
+    #         relativeLink = reverse('email-verify')
+    #         absurl = 'http://'+str(current_site) + \
+    #             relativeLink+'?token='+str(token)
+    #         email_body = 'Hello '+user.name + \
+    #             ', please click on the link to verify your email \n' + absurl
+    #         data = {'email_body': email_body, 'to_email': user.email,
+    #                 'email_subject': 'Verify your Email!'}
+    #         Util.send_email(data)
+    #         return Response(user_data, status=status.HTTP_201_CREATED)
+    #     except Exception as e:
+    #         return Response({"error": str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 # class CustomerRegisterView(generics.GenericAPIView):

@@ -6,7 +6,7 @@ from .models import CustomUser, Customer, Restaurant
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
-# from django.contrib.auth.tokens import PasswordResetTokenGenerator
+#from django.contrib.auth.tokens import PasswordResetTokenGenerator
 # from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import EmailValidator
@@ -14,6 +14,7 @@ from django.core.validators import EmailValidator
 from rest_framework import serializers, status, validators
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
+from django.contrib.auth.password_validation import validate_password
 
 
 class UserSerializer(serializers.ModelSerializer):

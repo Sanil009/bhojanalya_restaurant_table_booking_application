@@ -14,12 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from authentication.views import EmailTokenObtainPairView, VerifyEmail
+from authentication.views import EmailTokenObtainPairView, VerifyEmail, ChangePasswordView
+from rest_framework_simplejwt.views import TokenRefreshView
 from django.core.mail import EmailMessage
 from django.contrib import admin
 from django.urls import path, include
 from bhojanalaya_backend import settings
 from django.conf.urls.static import static
+from rest_framework import permissions
+
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
@@ -28,8 +31,13 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('bookings/', include('bookings.urls')),
     path('email-verify', VerifyEmail.as_view(), name='email-verify'),
+    path('authentication/change_password/<int:pk>/',
+         ChangePasswordView.as_view(), name='auth_change_password'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token/', EmailTokenObtainPairView.as_view()),
+    path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('api/password_reset/',
+         include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('invoice/', include('invoice.urls')),
     path('reviews/', include('reviews.urls'))
     # path('api/token/refresh/', TokenRefreshView.as_view()),
