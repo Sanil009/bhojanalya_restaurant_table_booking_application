@@ -53,6 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
             title: 'Account',
             tiles: [
               SettingsTile(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/profile', (route) => false);
+                },
                 title: 'Account Details',
                 leading: Icon(Icons.account_circle_outlined),
               ),

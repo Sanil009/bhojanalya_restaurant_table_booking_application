@@ -40,7 +40,7 @@ class _SignupState extends State<Signup> {
       'address': addressTextEditingController.text.trim(),
     };
     try {
-      var response = await dio.post("http://192.168.1.164:8000/auth/register/",
+      var response = await dio.post("http://192.168.1.166:8000/auth/register/",
           data: json.encode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
@@ -71,7 +71,7 @@ class _SignupState extends State<Signup> {
       showDialog(
           context: context,
           builder: (context) {
-            return buildAlertDialog("Verification Link Sent to Email!");
+            return buildAlertDialog("Error");
           });
     }
     await progressDialog.hide();

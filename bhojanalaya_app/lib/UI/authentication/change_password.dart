@@ -3,50 +3,73 @@ import 'dart:convert';
 import 'package:bhojanalaya_app/UI/widgets/alert_dialog.dart';
 import 'package:bhojanalaya_app/UI/widgets/progress_dialog.dart';
 import 'package:bhojanalaya_app/constants.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../../constants.dart';
-import 'package:dio/dio.dart';
 
-class LoginPage extends StatefulWidget {
+class ChangePasswordPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  Dio dio = new Dio();
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  Dio dio = Dio();
+  TextEditingController emailcontroller = new TextEditingController();
+  final baseUrl = "http://192.168.1.164:8000/api/password_reset/";
   final TextEditingController emailTextEditingController =
       new TextEditingController();
-  final TextEditingController passwordTextEditingController =
+  final TextEditingController oldpasswordTextEditingController =
       new TextEditingController();
-  Response response;
-  Future<void> onloginbtnpressed(context) async {
+  final TextEditingController newpasswordTextEditingController =
+      new TextEditingController();
+
+  void onResetPressed(context) async {
+    ProgressDialog progressDialog =
+        buildProgressDialog(context, "Validating Data...");
+    await progressDialog.show();
     var data = {
-      'email': emailTextEditingController.text,
-      'password': passwordTextEditingController.text
+      'email': emailTextEditingController.text.trim(),
+      'old password': oldpasswordTextEditingController.text.trim(),
+      'new password': newpasswordTextEditingController.text.trim(),
     };
     try {
-      var response = await dio.post("http://192.168.1.166:8000/api/token/",
+      var response = await dio.post(
+          "http://192.168.1.164:8000/api/password_reset/",
           data: json.encode(data));
-      if (response.statusCode == 200) {
-        ProgressDialog progressDialog =
-            buildProgressDialog(context, "Logging in...");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+        // jsonResponse = json.decode(response.data);
         await progressDialog.hide();
-        print(response.statusCode);
-        if (response.data['user_type'] == "C") {
-          await Navigator.pushNamed(context, '/home');
-        } else {
-          await Navigator.pushNamed(context, '/restaurant_dashboard');
-        }
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text("Verification Link Sent to Email!"),
+                title: Text("Verification Pending"),
+                actions: [
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: Text('Ok'))
+                ],
+              );
+            });
+        await Future.delayed(Duration(seconds: 1), () async {
+          await Navigator.pushNamed(context, '/login');
+        });
       }
     } catch (e) {
+      await progressDialog.hide();
       print(e);
       showDialog(
           context: context,
           builder: (context) {
-            return buildAlertDialog("Invalid");
+            return buildAlertDialog("Invalid!");
           });
     }
+    await progressDialog.hide();
   }
 
   @override
@@ -72,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Login',
+                          'Change',
                           style: TextStyle(
                             fontSize: 85.0,
                             fontWeight: FontWeight.bold,
@@ -81,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          'Hello',
+                          'Password',
                           style: kTextStyle,
                         ),
                       ],
@@ -102,63 +125,32 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: 'Email',
                         labelStyle: kTextStyle,
                       ),
-                      controller: emailTextEditingController,
                     ),
                     SizedBox(height: 10.0),
-                    //Password
+
+                    //Old Password
                     TextField(
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'New Password',
                         labelStyle: kTextStyle,
                       ),
-                      controller: passwordTextEditingController,
-                      obscureText: true,
                     ),
-                    SizedBox(height: 20.0),
-                    //Forgot Password
-                    Container(
-                      alignment: Alignment(1.0, 0.0),
-                      child: GestureDetector(
-                        child: InkWell(
-                          child: Text(
-                            'Forgot Password?',
-                            style: kLoginUnderLinedText,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/reset', (route) => false);
-                        },
+                    SizedBox(height: 10.0),
+
+                    //New Passowrd
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'New Password',
+                        labelStyle: kTextStyle,
                       ),
                     ),
-                    SizedBox(height: 20.0),
-                    //Login Button
+                    SizedBox(height: 10.0),
+
                     RaisedButton(
                       onPressed: () {
-                        onloginbtnpressed(context);
-                        // Navigator.of(context)
-                        //     .pushNamedAndRemoveUntil('/home', (route) => false);
-                      },
-                      color: Colors.black,
-                      textColor: Colors.black,
-                      padding: EdgeInsets.all(0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFFFFFF),
-                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        ),
-                        padding: EdgeInsets.fromLTRB(135.0, 15.0, 135.0, 15.0),
-                        child: Text(
-                          'LOGIN',
-                          style: kTextStyle,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/first_screen', (route) => false);
+                        onResetPressed(context);
+                        // Navigator.of(context).pushNamedAndRemoveUntil(
+                        //     '/login', (route) => false);
                       },
                       color: Colors.black,
                       textColor: Colors.white,
@@ -168,40 +160,39 @@ class _LoginPageState extends State<LoginPage> {
                           color: kRedColour,
                           borderRadius: BorderRadius.all(Radius.circular(50.0)),
                         ),
-                        padding: EdgeInsets.fromLTRB(145.0, 15.0, 145.0, 15.0),
+                        padding: EdgeInsets.fromLTRB(135.0, 15.0, 135.0, 15.0),
                         child: Text(
-                          'Back',
+                          'DONE',
                           style: kTextStyle,
                         ),
                       ),
                     ),
+                    SizedBox(height: 10.0),
+                    //Cancel
+                    RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (route) => false);
+                      },
+                      color: Colors.black,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(0.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: kRedColour,
+                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        ),
+                        padding: EdgeInsets.fromLTRB(120.0, 15.0, 120.0, 15.0),
+                        child: Text(
+                          'CANCEL',
+                          style: kTextStyle,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
                   ],
                 ),
               ),
-            ),
-            //3rd Part
-            //Register
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Need an account?',
-                  style: TextStyle(
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 5.0),
-                InkWell(
-                  child: Text(
-                    'Register',
-                    style: kLoginUnderLinedText,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/signup');
-                  },
-                ),
-              ],
             ),
           ],
         ),

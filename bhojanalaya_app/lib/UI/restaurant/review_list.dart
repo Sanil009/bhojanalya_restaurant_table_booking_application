@@ -5,15 +5,15 @@ import 'package:http/http.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:bhojanalaya_app/constants.dart';
 
-class BookingList extends StatefulWidget {
-  BookingList({Key key}) : super(key: key);
+class ReviewList extends StatefulWidget {
+  ReviewList({Key key}) : super(key: key);
 
   @override
-  _BookingListState createState() => _BookingListState();
+  _ReviewListState createState() => _ReviewListState();
 }
 
-class _BookingListState extends State<BookingList> {
-  // final baseUrl = env["http://192.168.1.164:8000/bookings"];
+class _ReviewListState extends State<ReviewList> {
+  // final baseUrl = env["http://192.168.1.164:8000/reviews"];
   // Response response;
   // Future<List> fetchCruds() async {
   //   var response = await http.get($baseUrl);
@@ -49,7 +49,7 @@ class _BookingListState extends State<BookingList> {
           automaticallyImplyLeading: true,
           backgroundColor: kRedColour,
           title: Text(
-            "Your Bookings",
+            "Reviews",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -108,33 +108,6 @@ class _BookingListState extends State<BookingList> {
                                       fontSize: 13, color: Colors.white),
                                 ),
                               ],
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-
-                            FlatButton(
-                              onPressed: () {
-                                // onloginbtnpressed(context);
-                                // Navigator.of(context)
-                                //     .pushNamedAndRemoveUntil('/home', (route) => false);
-                              },
-                              color: Colors.grey,
-                              textColor: Colors.black,
-                              padding: EdgeInsets.all(0.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFFFFFFF),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                ),
-                                padding:
-                                    EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                                child: Text(
-                                  'Cancel Booking',
-                                  style: kSmallTextStyle,
-                                ),
-                              ),
                             ),
                             // SizedBox(
                             //   width: 2,

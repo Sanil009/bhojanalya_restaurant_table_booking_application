@@ -69,7 +69,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         labelText: 'Comment',
                         labelStyle: kTextStyle,
                       ),
-                      obscureText: true,
+                      maxLength: 255,
                     ),
                     SizedBox(height: 20.0),
                     //Submit Button

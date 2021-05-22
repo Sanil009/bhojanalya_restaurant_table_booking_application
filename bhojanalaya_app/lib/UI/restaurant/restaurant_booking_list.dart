@@ -5,14 +5,14 @@ import 'package:http/http.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:bhojanalaya_app/constants.dart';
 
-class BookingList extends StatefulWidget {
-  BookingList({Key key}) : super(key: key);
+class RestaurantBookingList extends StatefulWidget {
+  RestaurantBookingList({Key key}) : super(key: key);
 
   @override
-  _BookingListState createState() => _BookingListState();
+  _RestaurantBookingListState createState() => _RestaurantBookingListState();
 }
 
-class _BookingListState extends State<BookingList> {
+class _RestaurantBookingListState extends State<RestaurantBookingList> {
   // final baseUrl = env["http://192.168.1.164:8000/bookings"];
   // Response response;
   // Future<List> fetchCruds() async {
@@ -46,6 +46,13 @@ class _BookingListState extends State<BookingList> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/restaurant_dashboard', (route) => false);
+            },
+          ),
           automaticallyImplyLeading: true,
           backgroundColor: kRedColour,
           title: Text(
@@ -69,7 +76,7 @@ class _BookingListState extends State<BookingList> {
                       elevation: 6,
                       child: ListTile(
                         title: new Text(
-                          'Bambooz',
+                          'Sanil Shrestha',
                           style: new TextStyle(
                               fontSize: 20.0, color: Colors.white),
                         ),
@@ -112,30 +119,62 @@ class _BookingListState extends State<BookingList> {
                             SizedBox(
                               height: 20.0,
                             ),
+                            Row(
+                              children: [
+                                //Accept btn
+                                FlatButton(
+                                  onPressed: () {
+                                    // onloginbtnpressed(context);
+                                    // Navigator.of(context)
+                                    //     .pushNamedAndRemoveUntil('/home', (route) => false);
+                                  },
+                                  color: Colors.grey,
+                                  textColor: Colors.black,
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF22CC55),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(50.0)),
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(
+                                        10.0, 10.0, 10.0, 10.0),
+                                    child: Text(
+                                      'Accept',
+                                      style: kSmallTextStyle,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15.0,
+                                ),
 
-                            FlatButton(
-                              onPressed: () {
-                                // onloginbtnpressed(context);
-                                // Navigator.of(context)
-                                //     .pushNamedAndRemoveUntil('/home', (route) => false);
-                              },
-                              color: Colors.grey,
-                              textColor: Colors.black,
-                              padding: EdgeInsets.all(0.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFFFFFFF),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
+                                //cancel btn
+                                FlatButton(
+                                  onPressed: () {
+                                    // onloginbtnpressed(context);
+                                    // Navigator.of(context)
+                                    //     .pushNamedAndRemoveUntil('/home', (route) => false);
+                                  },
+                                  color: Colors.grey,
+                                  textColor: Colors.black,
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFAC5555),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(50.0)),
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(
+                                        10.0, 10.0, 10.0, 10.0),
+                                    child: Text(
+                                      'Cancel',
+                                      style: kSmallTextStyle,
+                                    ),
+                                  ),
                                 ),
-                                padding:
-                                    EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                                child: Text(
-                                  'Cancel Booking',
-                                  style: kSmallTextStyle,
-                                ),
-                              ),
-                            ),
+                              ],
+                            )
                             // SizedBox(
                             //   width: 2,
                             // ),
@@ -152,7 +191,7 @@ class _BookingListState extends State<BookingList> {
                 ),
               ]),
             )),
-            //yeta samma
+
             // Expanded(
             //     child: SizedBox(
             //   height: MediaQuery.of(context).size.height,

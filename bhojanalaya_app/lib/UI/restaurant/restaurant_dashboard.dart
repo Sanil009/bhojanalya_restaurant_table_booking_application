@@ -23,7 +23,8 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
             IconButton(
               icon: Icon(Icons.person, color: Colors.black),
               onPressed: () {
-                Navigator.of(context).pushNamed('/restaurant_profile');
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/restaurant_profile', (route) => false);
               },
             )
           ],
@@ -59,8 +60,8 @@ class _RestaurantDashboardState extends State<RestaurantDashboard> {
                 //View Bookings Button
                 RaisedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('', (route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/restaurant_booking_list', (route) => false);
                   },
                   color: Colors.black,
                   textColor: Colors.white,
