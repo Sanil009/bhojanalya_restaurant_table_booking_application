@@ -8,7 +8,7 @@ from .models import Bookings
 class BookingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bookings
-        fields = ['booked_date', 'booked_time', 'customer', 'restaurant']
+        fields = ['id', 'booked_date', 'booked_time', 'customer', 'restaurant', 'is_accepted']
 
 
 # class BookConfirmSerializer(serializers.ModelSerializer):

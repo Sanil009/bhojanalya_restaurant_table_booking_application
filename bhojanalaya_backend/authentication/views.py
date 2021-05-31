@@ -139,7 +139,6 @@ class RestaurantViewset(viewsets.ModelViewSet):
             self.permission_classes = (IsAdminUser,)
         return super(RestaurantViewset, self).get_permissions()
 
-# ProfileOwnerOrReadOnly,
 
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -148,6 +147,11 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+
+
+
+
 
 
     # def create(self, request):

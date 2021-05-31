@@ -109,33 +109,6 @@ class _BookingListState extends State<BookingList> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-
-                            FlatButton(
-                              onPressed: () {
-                                // onloginbtnpressed(context);
-                                // Navigator.of(context)
-                                //     .pushNamedAndRemoveUntil('/home', (route) => false);
-                              },
-                              color: Colors.grey,
-                              textColor: Colors.black,
-                              padding: EdgeInsets.all(0.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFFFFFFF),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                ),
-                                padding:
-                                    EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                                child: Text(
-                                  'Cancel Booking',
-                                  style: kSmallTextStyle,
-                                ),
-                              ),
-                            ),
                             // SizedBox(
                             //   width: 2,
                             // ),

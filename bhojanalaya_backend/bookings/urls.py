@@ -1,24 +1,32 @@
-# from django.urls import path
-# from . import views
 
 from . import views as BookingsView
 from rest_framework import routers
 from django.urls import path, include
+# from bookings import views
 
 router = routers.DefaultRouter()
-# # router.register('services', BookingView.ServicesViewsets, basename='services')
-# router.register('bookings', BookingsView.BookingsViewsets, basename='bookings')
-# # router.register('book', BookingView.BookConfirmViewsets, basename='book')
 
 router = routers.DefaultRouter()
 router.register('bookings',
                 BookingsView.BookingsViewset, basename='bookings')
-# router.register('bookconfirm', BookConfirmView.InsightViewset,
-#                 basename='bookconfirm')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('get_bookings/', BookingsView.get_bookings, name='get_bookings'),
 ]
+
+
+#     path('bookingslist/', views.BookingsListView.as_view()),
+#     path('bookingscreate/', views.BookingsCreateView.as_view()),
+
+
+
+
+
+
+
+
+
 
 
 

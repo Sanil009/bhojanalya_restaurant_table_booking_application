@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bhojanalaya_app/UI/widgets/alert_dialog.dart';
 import 'package:bhojanalaya_app/UI/widgets/progress_dialog.dart';
 import 'package:bhojanalaya_app/constants.dart';
+import 'package:bhojanalaya_app/constants/urls_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -15,9 +16,7 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Dio dio = Dio();
-  TextEditingController emailcontroller = new TextEditingController();
-  final baseUrl = "http://192.168.1.164:8000/api/password_reset/";
-  final TextEditingController emailTextEditingController =
+  final TextEditingController tokenTextEditingController =
       new TextEditingController();
   final TextEditingController newpasswordTextEditingController =
       new TextEditingController();
@@ -27,12 +26,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         buildProgressDialog(context, "Validating Data...");
     await progressDialog.show();
     var data = {
-      'email': emailTextEditingController.text.trim(),
-      'new password': newpasswordTextEditingController.text.trim(),
+      'token': tokenTextEditingController.text.trim(),
+      'password': newpasswordTextEditingController.text.trim(),
     };
     try {
-      var response = await dio.post(
-          "http://192.168.1.164:8000/api/password_reset/",
+      var response = await dio.post(api_url + "/api/password_reset/confirm/",
           data: json.encode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
@@ -42,8 +40,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                content: Text("Verification Link Sent to Email!"),
-                title: Text("Verification Pending"),
+                content: Text("Password Reset Sucessfull"),
+                title: Text("Sucess"),
                 actions: [
                   FlatButton(
                       onPressed: () {
@@ -53,9 +51,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ],
               );
             });
-        await Future.delayed(Duration(seconds: 1), () async {
-          await Navigator.pushNamed(context, '/login');
-        });
       }
     } catch (e) {
       await progressDialog.hide();
@@ -79,11 +74,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            //1st Part
             Container(
-              //Used Stack because any other widgets like colomn, containers etc
-              //conatins some kind of default padding in them.
-              //Hello There!
               child: Stack(
                 children: <Widget>[
                   Container(
@@ -92,17 +83,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Reset',
+                          'Reset Passowrd',
                           style: TextStyle(
-                            fontSize: 85.0,
+                            fontSize: 45.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Raleway',
                           ),
-                        ),
-                        SizedBox(height: 5.0),
-                        Text(
-                          'Password',
-                          style: kTextStyle,
                         ),
                       ],
                     ),
@@ -118,16 +104,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   children: <Widget>[
                     //Email
                     TextField(
+                      controller: tokenTextEditingController,
                       decoration: InputDecoration(
-                        labelText: 'Email',
+                        labelText: 'Token',
                         labelStyle: kTextStyle,
                       ),
                     ),
                     SizedBox(height: 10.0),
                     //Old Password
                     TextField(
+                      controller: newpasswordTextEditingController,
                       decoration: InputDecoration(
-                        labelText: 'New Password',
+                        labelText: 'Password',
                         labelStyle: kTextStyle,
                       ),
                     ),
@@ -136,8 +124,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     RaisedButton(
                       onPressed: () {
                         onResetPressed(context);
-                        // Navigator.of(context).pushNamedAndRemoveUntil(
-                        //     '/login', (route) => false);
                       },
                       color: Colors.black,
                       textColor: Colors.white,

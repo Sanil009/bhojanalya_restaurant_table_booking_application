@@ -1,7 +1,7 @@
 
 from rest_framework import viewsets
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from bookings.serializers import BookingsSerializer
 from .models import Bookings
@@ -16,53 +16,100 @@ from authentication.permissions import CustomerOrReadOnly
 from .models import Bookings
 from .serializers import BookingsSerializer
 from rest_framework import viewsets, status
+from rest_framework.generics import ListAPIView, CreateAPIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 # # Create your views here.
-
-
-# class BookingsViewsets(viewsets.ModelViewSet):
-#     queryset = Bookings.objects.all()
-#     serializer_class = BookingsSerializer
-
-
-# class BookConfirmViewsets(viewsets.ModelViewSet):
-#     queryset = BookConfirm.objects.all()
-#     serializer_class = BookConfirmSerializer
 
 class BookingsViewset(viewsets.ModelViewSet):
     serializer_class = BookingsSerializer
     queryset = Bookings.objects.all()
 
     def list(self, request):
-        if request.user.is_active==False:
+        if request.user.is_active == False:
             return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
         elif request.user.is_restaurant:
-            queryset = Bookings.objects.filter(restaurant=Restaurant.objects.get(user=self.request.user))
-            serializer = BookingsSerializer(queryset, many=True, )
-        elif request.user.is_customer:
             queryset = Bookings.objects.filter(
-                customer=Customer.objects.get(user=self.request.user))
+            restaurant=Restaurant.objects.get(user=request.user))
             serializer = BookingsSerializer(queryset, many=True, )
         elif request.user.is_active:
-            queryset = Bookings.objects.all()
+            queryset = Bookings.objects.filter(customer=Customer.objects.get(
+                user=request.user))
             serializer = BookingsSerializer(queryset, many=True, )
         else:
-            queryset = Bookings.objects.all()
-        serializer = BookingsSerializer(queryset, many=True, )
+            return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
+        
+        # if request.user.is_active == False:
+        #     return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+        # elif request.user.is_restaurant:
+        #     queryset = Bookings.objects.filter(
+        #         restaurant=Restaurant.objects.get(user=self.request.user))
+        #     serializer = BookingsSerializer(queryset, many=True, )
+        # elif request.user.is_active:
+        #     queryset = Bookings.objects.filter(
+        #         customer=Customer.objects.get(user=self.request.user))
+        #     serializer = BookingsSerializer(queryset, many=True, )
+        # # elif request.user.is_active:
+        # #     queryset = Bookings.objects.all()
+        # #     serializer = BookingsSerializer(queryset, many=True, )
+        # else:
+        #     queryset = Bookings.objects.all()
+        # serializer = BookingsSerializer(queryset, many=True, )
+        # return Response(serializer.data)
 
     def create(self, request):
-        if self.request.user.is_customer:
-            serializer = BookingsSerializer(data=request.data, context={"request": request})
+        if self.request.user.is_active:
+            serializer = BookingsSerializer(
+                data=request.data, context={"request": request})
             serializer.is_valid()
             serializer.save()
             return Response({'success': 'Booking Successfully Created'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+def get_bookings(request):
+    if request.user.is_active == False:
+        return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+    elif request.user.is_restaurant:
+        queryset = Bookings.objects.filter(
+            restaurant=Restaurant.objects.get(user=request.user))
+        serializer = BookingsSerializer(queryset, many=True, )
+    elif request.user.is_active:
+        queryset = Bookings.objects.filter(customer=Customer.objects.get(
+            user=request.user))
+        serializer = BookingsSerializer(queryset, many=True, )
+    else:
+        return Response({'error': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.data)
+        
+
+
+# class BookingsListView(ListAPIView):
+#     queryset = Bookings.objects.all()
+#     serializer_class = BookingsSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['restaurant', 'customer']
         
         
-        
-        
+# class BookingsCreateView(CreateAPIView):
+#     queryset = Bookings.objects.all()
+#     serializer_class = BookingsSerializer
+
+#     def create(self, request):
+#         if self.request.user.is_active:
+#             serializer = BookingsSerializer(
+#                 data=request.data, context={"request": request})
+#             serializer.is_valid()
+#             serializer.save()
+#             print(serializer)
+#             return Response({'success': 'Review Successfully Created'}, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response({'error': 'Only verified customer can review'}, status=status.HTTP_400_BAD_REQUEST)
         
         
 

@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             contact=validated_data['contact'],
             address=validated_data['address'],
-            user_type=validated_data['user_type']
+            user_type=validated_data['user_type'],
         )
 
         user.set_password(validated_data['password'])

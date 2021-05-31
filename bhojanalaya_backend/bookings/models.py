@@ -12,11 +12,10 @@ class Bookings(models.Model):
         'authentication.Customer', on_delete=models.CASCADE)
     restaurant = models.ForeignKey(
         'authentication.Restaurant', on_delete=models.CASCADE)
+    is_accepted = models.CharField(max_length=10, default=False)
     book = models.BooleanField(default=False)
-    is_accepted = models.CharField(max_length=10, default='false')
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # expired = models.BooleanField(_("")) 
     # stat = (('Pending', 'Pending'), ('Approved', 'Approved'))
     # status = models.CharField(
     #     max_length=50, choices=stat, default='Pending', null=True)

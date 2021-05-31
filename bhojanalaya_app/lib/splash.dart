@@ -1,10 +1,6 @@
 import 'package:bhojanalaya_app/UI/authentication/login.dart';
-import 'package:bhojanalaya_app/constants.dart';
-import 'UI/screens/first_screen.dart';
-import 'dart:async';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
 
 class Splash extends StatefulWidget {
   @override

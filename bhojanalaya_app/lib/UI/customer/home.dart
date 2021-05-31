@@ -1,12 +1,15 @@
 import 'dart:convert';
-
-// import 'package:bhojanalaya_app/UI/restaurant/restaurant_list.dart';
+import 'package:bhojanalaya_app/UI/customer/my_bookings.dart';
+import 'package:bhojanalaya_app/UI/customer/profile.dart';
 import 'package:bhojanalaya_app/UI/customer/restaurant_details.dart';
-import 'package:bhojanalaya_app/UI/restaurant/restaurant_profile.dart';
+import 'package:bhojanalaya_app/UI/customer/view_restaurants.dart';
+import 'package:bhojanalaya_app/constants/urls_constants.dart';
+import 'package:bhojanalaya_app/splash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:localstorage/localstorage.dart';
 import '../../constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,16 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map> myProducts =
-      List.generate(1000, (index) => {"id": index, "name": "Product $index"})
-          .toList();
-
-  final CategoriesScroller categoriesScroller = CategoriesScroller();
+  LocalStorage storage = LocalStorage("storage-key");
   ScrollController controller = ScrollController();
   bool closeTopContainer = false;
   double topContainer = 0;
 
-  final baseUrl = "http://192.168.1.164:8000/auth/restaurant/";
+  final baseUrl = api_url + "/auth/restaurant/";
   Response response;
   Future<List> fetchCruds() async {
     var response = await http.get(baseUrl);
@@ -50,332 +49,251 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size; //
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'Bhojanalya',
-            style: kTextStyle,
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.black),
-              onPressed: () {
-                showSearch(context: context, delegate: DataSearch());
-              },
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            title: Text(
+              'Bhojanalaya',
+              style: kTextStyle,
             ),
-            IconButton(
-              icon: Icon(Icons.person, color: Colors.black),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/profile');
-              },
-            )
-          ],
-        ),
-        drawer: Drawer(
-          child: ListView(
-            // Removing padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text(
-                  'Explore',
-                  style: kBigTextStyle,
-                ),
-                decoration: BoxDecoration(
-                  color: kRedColour,
-                ),
-              ),
-              ListTile(
-                title: Text('My Bookings', style: kSmallTextStyle),
-                leading: Icon(Icons.calendar_today_rounded),
-                onTap: () {
-                  // close the drawer
-                  Navigator.of(context).pushNamed('/booking_list');
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.person, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/profile');
                 },
-              ),
-              // ListTile(
-              //   title: Text('Saved', style: kSmallTextStyle),
-              //   leading: Icon(Icons.add_box),
-              //   onTap: () {
-              //     // close the drawer
-              //     Navigator.pop(context);
-              //   },
-              // ),
-              // ListTile(
-              //   title: Text('Help Centre', style: kSmallTextStyle),
-              //   onTap: () {
-              //     // close the drawer
-              //     Navigator.pop(context);
-              //   },
-              // ),
-              ListTile(
-                title: Text('Settings', style: kSmallTextStyle),
-                leading: Icon(Icons.app_settings_alt_outlined),
-                onTap: () {
-                  // close the drawer
-                  Navigator.of(context).pushNamed('/settings');
-                },
-              ),
-              // ListTile(
-              //   title: Text('Menu', style: kSmallTextStyle),
-              //   onTap: () {
-              //     // close the drawer
-              //     Navigator.of(context).pushNamed('/menu');
-              //   },
-              // ),
+              )
             ],
           ),
-        ),
-        body: Container(
-          height: size.height,
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(
-                    "Popular Restaurants",
-                    style: kTextStyle,
+          drawer: Drawer(
+            child: ListView(
+              // Removing padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text(
+                    'Explore',
+                    style: kBigTextStyle,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              categoriesScroller,
-
-              FutureBuilder<List>(
-                  future: fetchCruds(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data.isEmpty) {
-                      return CircularProgressIndicator();
-                    } else {
-                      return Expanded(
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 200,
-                                  childAspectRatio: 3 / 2,
-                                  crossAxisSpacing: 20,
-                                  mainAxisSpacing: 20),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, i) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        new RestaurantDetails(
-                                          list: snapshot.data,
-                                          index: i,
-                                        )));
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Restaurant: ${snapshot.data[i]["name"]}",
-                                  style: kSmallTextStyle,
-                                ),
-                                decoration: BoxDecoration(
-                                    color: kRedColour,
-                                    borderRadius: BorderRadius.circular(15)),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  }),
-
-              // Expanded(
-              //   child: ListView.builder(
-              //     controller: controller,
-              //     itemCount: itemsData.length,
-              //     physics: BouncingScrollPhysics(),
-              //     itemBuilder: (context, index) {
-              //       double scale = 1.0;
-              //       if (topContainer > 0.5) {
-              //         scale = index + 0.5 - topContainer;
-              //         if (scale < 0) {
-              //           scale = 0;
-              //         } else if (scale > 1) {
-              //           scale = 1;
-              //         }
-              //       }
-              //       return Opacity(
-              //         opacity: scale,
-              //         child: Transform(
-              //           transform: Matrix4.identity()..scale(scale, scale),
-              //           alignment: Alignment.bottomCenter,
-              //           child: Align(
-              //               heightFactor: 0.7,
-              //               alignment: Alignment.topCenter,
-              //               child: itemsData[index]),
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // ),
-            ],
+                  decoration: BoxDecoration(
+                    color: kRedColour,
+                  ),
+                ),
+                ListTile(
+                  title: Text('My Bookings', style: kSmallTextStyle),
+                  leading: Icon(Icons.calendar_today_rounded),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => new MyBookings()));
+                    // close the drawer
+                    // Navigator.of(context).pushNamed('/booking_list');
+                  },
+                ),
+                ListTile(
+                  title: Text('Settings', style: kSmallTextStyle),
+                  leading: Icon(Icons.app_settings_alt_outlined),
+                  onTap: () {
+                    // close the drawer
+                    Navigator.of(context).pushNamed('/settings');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout', style: kSmallTextStyle),
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Logout"),
+                          content: Text("Are you sure you want to logout ?"),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  storage.deleteItem("user_id");
+                                  storage.deleteItem("token");
+                                  storage.deleteItem("refresh");
+                                  print(storage.getItem("user_id"));
+                                  print(storage.getItem("token"));
+                                  print(storage.getItem("refresh"));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          new Splash()));
+                                },
+                                child: Text("Yes")),
+                            ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("No")),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CategoriesScroller extends StatelessWidget {
-  const CategoriesScroller();
-
-  @override
-  Widget build(BuildContext context) {
-    final double categoryHeight =
-        MediaQuery.of(context).size.height * 0.30 - 50;
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: FittedBox(
-          fit: BoxFit.fill,
-          alignment: Alignment.topCenter,
-          child: Row(
-            children: <Widget>[
-              //Top horizontal scroll view.
-              Container(
-                width: 150,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(
-                    color: Colors.orange.shade400,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  // height: MediaQuery.of(context).size.height * 0.85,
+                  width: MediaQuery.of(context).size.width,
+                  child: GridView.extent(
+                    physics: NeverScrollableScrollPhysics(),
+                    primary: false,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(5),
+                    crossAxisSpacing: 5,
+                    // mainAxisSpacing: 7,
+                    maxCrossAxisExtent: 200.0,
                     children: <Widget>[
-                      Text(
-                        "Pizza",
-                        style: kTextStyle,
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new ViewRestaurants())),
+                        child: Container(
+                          color: Colors.white,
+                          margin: const EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
+                          child: Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.restaurant,
+                                    size: 90,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "View Restaurants",
+                                    style: kSmallTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "0 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new MyBookings())),
+                        child: Container(
+                          color: Colors.white,
+                          margin: const EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(4.0),
+                          child: Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.note,
+                                    size: 90,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "My Bookings",
+                                    style: kSmallTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Container(
-                width: 150,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(
-                    color: Colors.blue.shade400,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 12.0, right: 10, top: 2.0),
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: [
                         Text(
-                          "Momo",
+                          "Popular Restaurants",
                           style: kTextStyle,
-                          //  TextStyle(
-                          //       fontSize: 25,
-                          //       color: Colors.white,
-                          //       fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "1 Items",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                        Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      new ViewRestaurants()));
+                            },
+                            icon: Icon(Icons.arrow_forward))
                       ],
                     ),
                   ),
                 ),
-              ),
-              Container(
-                width: 150,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(
-                    color: Colors.lightBlueAccent.shade400,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Super\nSaving",
-                        style: kTextStyle,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "0 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  child: FutureBuilder<List>(
+                      future: fetchCruds(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData || snapshot.data.isEmpty) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, i) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          new RestaurantDetails(
+                                            list: snapshot.data,
+                                            index: i,
+                                          )));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 300,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Restaurant: ${snapshot.data[i]["name"]}",
+                                      style: kSmallTextStyle,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: kRedColour,
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      }),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class DataSearch extends SearchDelegate<String> {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // actions for appbar
-    return [
-      IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            query = "";
-          }),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    // leading icon on the left of the appbar
-    return IconButton(
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation,
-        ),
-        onPressed: () {
-          close(context, null);
-        });
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // show some result based on the selection
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // show when someone seached for something
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        leading: Icon(Icons.restaurant),
-        title: Text("Restaurant"),
       ),
     );
   }
